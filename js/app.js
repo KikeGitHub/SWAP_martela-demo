@@ -7,7 +7,7 @@ window.MartelaApp = (function() {
     inventory: { name: 'Inventario por Pieza', icon: '▤', module: window.MartelaInventory },
     pricing: { name: 'Cotizador Fix Oro', icon: '◇', module: window.MartelaPricing },
     coppel: { name: 'Módulo Coppel B2B', icon: '🏢', module: window.MartelaCoppel },
-    billing: { name: 'Administración y Facturación', icon: '▧', module: window.MartelaBilling },
+    billing: { name: 'Facturación & CFDI 4.0', icon: '⚖', module: window.MartelaBilling },
     logistics: { name: 'Logística y Entregas PWA', icon: '🚚', module: window.MartelaLogistics },
     foundry: { name: 'Fundición y Mermas', icon: '🔥', module: window.MartelaFoundry },
     champions: { name: 'Alertas de Campeones', icon: '⭐', module: window.MartelaChampions },

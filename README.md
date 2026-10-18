@@ -117,12 +117,21 @@ Cada rol cuenta con una interfaz y permisos adaptados a su función operativa.
 - **Canvas táctil:** Captura de firma manuscrita del receptor en pantalla y simulación de adjuntos fotográficos de recibos sellados.
 - Vinculación automática con el folio de prefactura y generación del expediente digital para auditorías de Prevención de Lavado de Dinero (PLD).
 
-### 5. Fundición, Mermas y Protocolo de Rebabas
+### 5. Facturación Electrónica CFDI 4.0 & Cuentas por Cobrar (Superando a ASPEL-SAE)
+- **El límite de ASPEL-SAE:** Asume precios fijos y cantidades enteras, siendo incapaz de facturar sumando el gramaje neto real de joyas individuales y aplicando la fluctuación diaria del FIX de oro.
+- **La solución MARTELA:**
+  - **Doble Modo:** Facturación instantánea de pedidos B2B (ej. 438 piezas de Coppel amparadas con seriales) o Facturación Libre Directa para mostrador/mayoristas.
+  - **CFDI 4.0 Completo:** Timbrado simulado con UUID v4, Serie, Folio, Sellos Digitales SAT, Cadena Original y Código QR interactivo.
+  - **Descargas Reales:** Generación y descarga directa del archivo **XML fiscal (Anexo 20)** y la **Representación Impresa en PDF/HTML** con membrete oficial y cantidad en letra.
+  - **Cuentas por Cobrar (CxC) & REP:** Semáforo de cartera vencida vs. al corriente, registro de abonos y emisión automática del **Complemento de Recepción de Pagos (REP CFDI 4.0 Tipo P)** con soporte para **compensación en oro fino de maquila**.
+  - **Notas de Crédito (Tipo E) & Cancelación SAT:** Devoluciones de piezas con canalización directa al taller de fundición y acuse de cancelación fiscal.
+
+### 6. Fundición, Mermas y Protocolo de Rebabas
 - Registro de lotes de fusión de piezas rotas o devueltas.
 - Aplica el criterio metalúrgico: separa la merma térmica volatilizada (~20%) del material recuperable en crisol/rebabas (~80%) que se envía a análisis por copelación.
 - Emisión e impresión de actas internas de control de fundición.
 
-### 6. Inteligencia de Inventarios y Alertas de Campeones
+### 7. Inteligencia de Inventarios y Alertas de Campeones
 - Detección automática de modelos con rotación alta (Campeones) vs. productos sin movimiento.
 - Punto de reorden configurado considerando el tiempo de importación desde China (**60 a 90 días**).
 

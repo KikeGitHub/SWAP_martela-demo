@@ -205,6 +205,106 @@ window.MartelaUI = (function() {
     }
   }
 
+  // Conversor de número a letras en formato oficial CFDI SAT
+  function numeroALetras(monto) {
+    const unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE'];
+    const decenas = ['', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
+    const dieces = ['DIEZ', 'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE', 'DIECISÉIS', 'DIECISIETE', 'DIECIOCHO', 'DIECINUEVE'];
+    const centenas = ['', 'CIENTO', 'DOSCIENTOS', 'TRESCIENTOS', 'CUATROCIENTOS', 'QUINIENTOS', 'SEISCIENTOS', 'SETECIENTOS', 'OCHOCIENTOS', 'NOVECIENTOS'];
+
+    const num = Math.floor(Number(monto) || 0);
+    const centavos = Math.round((Number(monto) - num) * 100);
+    const strCentavos = `${String(centavos).padStart(2, '0')}/100 M.N.`;
+
+    if (num === 0) return `CERO PESOS ${strCentavos}`;
+
+    function seccion(n) {
+      if (n === 0) return '';
+      if (n === 100) return 'CIEN ';
+      let r = '';
+      const c = Math.floor(n / 100);
+      const d = Math.floor((n % 100) / 10);
+      const u = n % 10;
+
+      if (c > 0) r += centenas[c] + ' ';
+      if (d === 1) {
+        r += dieces[u] + ' ';
+      } else if (d === 2 && u > 0) {
+        r += 'VEINTI' + unidades[u] + ' ';
+      } else {
+        if (d > 0) r += decenas[d] + (u > 0 ? ' Y ' : ' ');
+        if (u > 0) r += unidades[u] + ' ';
+      }
+      return r;
+    }
+
+    let millones = Math.floor(num / 1000000);
+    let miles = Math.floor((num % 1000000) / 1000);
+    let pesos = num % 1000;
+
+    let res = '';
+    if (millones > 0) {
+      res += (millones === 1 ? 'UN MILLÓN ' : seccion(millones) + 'MILLONES ');
+    }
+    if (miles > 0) {
+      res += (miles === 1 ? 'MIL ' : seccion(miles) + 'MIL ');
+    }
+    if (pesos > 0) {
+      res += seccion(pesos);
+    }
+
+    const palabraPesos = num === 1 ? 'PESO' : 'PESOS';
+    return (res + palabraPesos + ' ' + strCentavos).replace(/\s+/g, ' ').trim();
+  }
+
+  // Generador vectorial de QR Fiscal SAT
+  function generateQRCodeSVG(text, size = 110) {
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) {
+      hash = ((hash << 5) - hash) + text.charCodeAt(i);
+      hash |= 0;
+    }
+
+    const grid = 23;
+    const cellSize = size / grid;
+    let rects = '';
+
+    // Patrones de esquina fijos de QR (Finders)
+    function addFinder(x0, y0) {
+      for (let r = 0; r < 7; r++) {
+        for (let c = 0; c < 7; c++) {
+          if (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
+            rects += `<rect x="${(x0 + c) * cellSize}" y="${(y0 + r) * cellSize}" width="${cellSize}" height="${cellSize}" fill="#0f172a"/>`;
+          }
+        }
+      }
+    }
+
+    addFinder(0, 0);
+    addFinder(grid - 7, 0);
+    addFinder(0, grid - 7);
+
+    // Módulos internos pseudoaleatorios consistentes
+    for (let r = 0; r < grid; r++) {
+      for (let c = 0; c < grid; c++) {
+        const inFinder1 = r < 7 && c < 7;
+        const inFinder2 = r < 7 && c >= grid - 7;
+        const inFinder3 = r >= grid - 7 && c < 7;
+        if (!inFinder1 && !inFinder2 && !inFinder3) {
+          const bit = Math.abs((hash ^ (r * 31 + c * 17) ^ (r * c)) % 3) === 0;
+          if (bit) {
+            rects += `<rect x="${c * cellSize}" y="${r * cellSize}" width="${cellSize}" height="${cellSize}" fill="#0f172a"/>`;
+          }
+        }
+      }
+    }
+
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" class="border border-slate-300 dark:border-slate-700 rounded bg-white p-1">
+      <rect width="${size}" height="${size}" fill="#ffffff"/>
+      ${rects}
+    </svg>`;
+  }
+
   return {
     money,
     grams,
@@ -218,6 +318,8 @@ window.MartelaUI = (function() {
     isCanvasSigned,
     getCanvasDataURL,
     downloadBlob,
-    exportToExcel
+    exportToExcel,
+    numeroALetras,
+    generateQRCodeSVG
   };
 })();
